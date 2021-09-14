@@ -135,14 +135,14 @@ func AddCatchphrase(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase failed to insert",
+			"message": "No se pudo insertar la frase clave",
 			"error":   err,
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"data":    result,
 		"success": true,
-		"message": "Catchphrase inserted successfully",
+		"message": "Frase clave insertada correctamente",
 	})
 
 }
@@ -165,7 +165,7 @@ func UpdateCatchphrase(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase not found",
+			"message": "Frase de captura no encontrada",
 			"error":   err,
 		})
 	}
@@ -177,13 +177,13 @@ func UpdateCatchphrase(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase failed to update",
+			"message": "La frase clave no se pudo actualizar",
 			"error":   err.Error(),
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": true,
-		"message": "Catchphrase updated successfully",
+		"message": "La frase clave se actualizó correctamente",
 	})
 }
 
@@ -195,7 +195,7 @@ func DeleteCatchphrase(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase not found",
+			"message": "Frase de captura no encontrada",
 			"error":   err,
 		})
 	}
@@ -203,12 +203,12 @@ func DeleteCatchphrase(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase failed to delete",
+			"message": "No se pudo borrar la frase clave",
 			"error":   err,
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": true,
-		"message": "Catchphrase deleted successfully",
+		"message": "La frase clave se eliminó correctamente",
 	})
 }
