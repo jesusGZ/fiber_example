@@ -16,10 +16,10 @@ import (
 )
 
 func GetAllSlogans(c *fiber.Ctx) error {
-	sloganCollection := config.MI.DB.Collection("eslogan")
+	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	var catchphrases []models.Slogan
+	var slogans []models.Slogan
 
 	filter := bson.M{}
 	findOptions := options.Find()
@@ -68,9 +68,9 @@ func GetAllSlogans(c *fiber.Ctx) error {
 	}
 
 	for cursor.Next(ctx) {
-		var catchphrase models.Slogan
-		cursor.Decode(&catchphrase)
-		catchphrases = append(catchphrases, catchphrase)
+		var slogan models.Slogan
+		cursor.Decode(&slogan)
+		slogans = append(slogans, slogan)
 	}
 
 	last := math.Ceil(float64(total / limit))
@@ -79,7 +79,7 @@ func GetAllSlogans(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"data":      catchphrases,
+		"data":      slogans,
 		"total":     total,
 		"page":      page,
 		"last_page": last,
@@ -88,41 +88,42 @@ func GetAllSlogans(c *fiber.Ctx) error {
 }
 
 func GetSlogan(c *fiber.Ctx) error {
-	sloganCollection := config.MI.DB.Collection("eslogan")
+	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	var catchphrase models.Slogan
+	var slogan models.Slogan
 	objId, err := primitive.ObjectIDFromHex(c.Params("id"))
 	findResult := sloganCollection.FindOne(ctx, bson.M{"_id": objId})
 	if err := findResult.Err(); err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase Not found",
+			"message": "slogan Not found",
 			"error":   err,
 		})
 	}
 
-	err = findResult.Decode(&catchphrase)
+	err = findResult.Decode(&slogan)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrase Not found",
+			"message": "slogan Not found",
 			"error":   err,
 		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"data":    catchphrase,
+		"data":    slogan,
 		"success": true,
 	})
 }
 
 func AddSlogan(c *fiber.Ctx) error {
-	sloganCollection := config.MI.DB.Collection("eslogan")
+	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	catchphrase := new(models.Slogan)
-
-	if err := c.BodyParser(catchphrase); err != nil {
+	slogan := new(models.Slogan)
+	log.Println(slogan)
+	log.Println(sloganCollection)
+	if err := c.BodyParser(slogan); err != nil {
 		log.Println(err)
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
@@ -131,7 +132,7 @@ func AddSlogan(c *fiber.Ctx) error {
 		})
 	}
 
-	result, err := sloganCollection.InsertOne(ctx, catchphrase)
+	result, err := sloganCollection.InsertOne(ctx, slogan)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
@@ -148,11 +149,11 @@ func AddSlogan(c *fiber.Ctx) error {
 }
 
 func UpdateSlogan(c *fiber.Ctx) error {
-	sloganCollection := config.MI.DB.Collection("eslogan")
+	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	catchphrase := new(models.Slogan)
+	slogan := new(models.Slogan)
 
-	if err := c.BodyParser(catchphrase); err != nil {
+	if err := c.BodyParser(slogan); err != nil {
 		log.Println(err)
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
@@ -171,7 +172,7 @@ func UpdateSlogan(c *fiber.Ctx) error {
 	}
 
 	update := bson.M{
-		"$set": catchphrase,
+		"$set": slogan,
 	}
 	_, err = sloganCollection.UpdateOne(ctx, bson.M{"_id": objId}, update)
 	if err != nil {
@@ -188,7 +189,7 @@ func UpdateSlogan(c *fiber.Ctx) error {
 }
 
 func DeleteSlogan(c *fiber.Ctx) error {
-	sloganCollection := config.MI.DB.Collection("eslogan")
+	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	objId, err := primitive.ObjectIDFromHex(c.Params("id"))
