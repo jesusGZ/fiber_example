@@ -16,10 +16,10 @@ import (
 )
 
 func GetAllCatchphrases(c *fiber.Ctx) error {
-	catchphraseCollection := config.MI.DB.Collection("catchphrases")
+	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	var catchphrases []models.Catchphrase
+	var catchphrases []models.Slogan
 
 	filter := bson.M{}
 	findOptions := options.Find()
@@ -51,12 +51,12 @@ func GetAllCatchphrases(c *fiber.Ctx) error {
 	limitVal, _ := strconv.Atoi(c.Query("limit", "10"))
 	var limit int64 = int64(limitVal)
 
-	total, _ := catchphraseCollection.CountDocuments(ctx, filter)
+	total, _ := sloganCollection.CountDocuments(ctx, filter)
 
 	findOptions.SetSkip((int64(page) - 1) * limit)
 	findOptions.SetLimit(limit)
 
-	cursor, err := catchphraseCollection.Find(ctx, filter, findOptions)
+	cursor, err := sloganCollection.Find(ctx, filter, findOptions)
 	defer cursor.Close(ctx)
 
 	if err != nil {
@@ -68,7 +68,7 @@ func GetAllCatchphrases(c *fiber.Ctx) error {
 	}
 
 	for cursor.Next(ctx) {
-		var catchphrase models.Catchphrase
+		var catchphrase models.Slogan
 		cursor.Decode(&catchphrase)
 		catchphrases = append(catchphrases, catchphrase)
 	}
@@ -88,12 +88,12 @@ func GetAllCatchphrases(c *fiber.Ctx) error {
 }
 
 func GetCatchphrase(c *fiber.Ctx) error {
-	catchphraseCollection := config.MI.DB.Collection("catchphrases")
+	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	var catchphrase models.Catchphrase
+	var catchphrase models.Slogan
 	objId, err := primitive.ObjectIDFromHex(c.Params("id"))
-	findResult := catchphraseCollection.FindOne(ctx, bson.M{"_id": objId})
+	findResult := sloganCollection.FindOne(ctx, bson.M{"_id": objId})
 	if err := findResult.Err(); err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
@@ -118,9 +118,9 @@ func GetCatchphrase(c *fiber.Ctx) error {
 }
 
 func AddCatchphrase(c *fiber.Ctx) error {
-	catchphraseCollection := config.MI.DB.Collection("catchphrases")
+	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	catchphrase := new(models.Catchphrase)
+	catchphrase := new(models.Slogan)
 
 	if err := c.BodyParser(catchphrase); err != nil {
 		log.Println(err)
@@ -131,7 +131,7 @@ func AddCatchphrase(c *fiber.Ctx) error {
 		})
 	}
 
-	result, err := catchphraseCollection.InsertOne(ctx, catchphrase)
+	result, err := sloganCollection.InsertOne(ctx, catchphrase)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
@@ -148,9 +148,9 @@ func AddCatchphrase(c *fiber.Ctx) error {
 }
 
 func UpdateCatchphrase(c *fiber.Ctx) error {
-	catchphraseCollection := config.MI.DB.Collection("catchphrases")
+	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	catchphrase := new(models.Catchphrase)
+	catchphrase := new(models.Slogan)
 
 	if err := c.BodyParser(catchphrase); err != nil {
 		log.Println(err)
@@ -173,7 +173,7 @@ func UpdateCatchphrase(c *fiber.Ctx) error {
 	update := bson.M{
 		"$set": catchphrase,
 	}
-	_, err = catchphraseCollection.UpdateOne(ctx, bson.M{"_id": objId}, update)
+	_, err = sloganCollection.UpdateOne(ctx, bson.M{"_id": objId}, update)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
@@ -188,7 +188,7 @@ func UpdateCatchphrase(c *fiber.Ctx) error {
 }
 
 func DeleteCatchphrase(c *fiber.Ctx) error {
-	catchphraseCollection := config.MI.DB.Collection("catchphrases")
+	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	objId, err := primitive.ObjectIDFromHex(c.Params("id"))
@@ -199,7 +199,7 @@ func DeleteCatchphrase(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	_, err = catchphraseCollection.DeleteOne(ctx, bson.M{"_id": objId})
+	_, err = sloganCollection.DeleteOne(ctx, bson.M{"_id": objId})
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
