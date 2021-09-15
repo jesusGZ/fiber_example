@@ -15,7 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func GetAllCatchphrases(c *fiber.Ctx) error {
+func GetAllSlogans(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
@@ -87,7 +87,7 @@ func GetAllCatchphrases(c *fiber.Ctx) error {
 	})
 }
 
-func GetCatchphrase(c *fiber.Ctx) error {
+func GetSlogan(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
@@ -117,7 +117,7 @@ func GetCatchphrase(c *fiber.Ctx) error {
 	})
 }
 
-func AddCatchphrase(c *fiber.Ctx) error {
+func AddSlogan(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	catchphrase := new(models.Slogan)
@@ -147,7 +147,7 @@ func AddCatchphrase(c *fiber.Ctx) error {
 
 }
 
-func UpdateCatchphrase(c *fiber.Ctx) error {
+func UpdateSlogan(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	catchphrase := new(models.Slogan)
@@ -187,7 +187,7 @@ func UpdateCatchphrase(c *fiber.Ctx) error {
 	})
 }
 
-func DeleteCatchphrase(c *fiber.Ctx) error {
+func DeleteSlogan(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("eslogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 

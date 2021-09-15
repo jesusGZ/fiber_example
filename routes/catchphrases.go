@@ -6,10 +6,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func CatchphrasesRoute(route fiber.Router) {
-	route.Get("/", controllers.GetAllCatchphrases)
-	route.Get("/:id", controllers.GetCatchphrase)
-	route.Post("/", controllers.AddCatchphrase)
-	route.Put("/:id", controllers.UpdateCatchphrase)
-	route.Delete("/:id", controllers.DeleteCatchphrase)
+func SloganRoute(route fiber.Router) {
+	route.Get("/", controllers.GetAllSlogans)
+	route.Get("/:id", controllers.GetSlogan)
+	route.Post("/", controllers.AddSlogan)
+	route.Put("/:id", controllers.UpdateSlogan)
+	route.Delete("/:id", controllers.DeleteSlogan)
 }

@@ -20,16 +20,16 @@ func setupRoutes(app *fiber.App) {
 		})
 	})
 
-	api := app.Group("/ap1")
+	api := app.Group("/v1")
 
-	routes.CatchphrasesRoute(api.Group("/catchphrases"))
+	routes.SloganRoute(api.Group("/slogan"))
 }
 
 func main() {
 	if os.Getenv("APP_ENV") != "production" {
 		err := godotenv.Load()
 		if err != nil {
-			log.Fatal("Error loading .env file")
+			log.Fatal("Error al cargar archivo .env")
 		}
 	}
 
@@ -46,7 +46,7 @@ func main() {
 	err := app.Listen(":" + port)
 
 	if err != nil {
-		log.Fatal("Error app failed to start")
+		log.Fatal("Error al iniciar la app")
 		panic(err)
 	}
 }
