@@ -47,8 +47,8 @@ func GetAllSlogans(c *fiber.Ctx) error {
 		}
 	}
 
-	page, _ := strconv.Atoi(c.Query("page", "1"))
-	limitVal, _ := strconv.Atoi(c.Query("limit", "10"))
+	page, _ := strconv.Atoi(c.Query("pagina", "1"))
+	limitVal, _ := strconv.Atoi(c.Query("limite", "10"))
 	var limit int64 = int64(limitVal)
 
 	total, _ := sloganCollection.CountDocuments(ctx, filter)
@@ -62,7 +62,7 @@ func GetAllSlogans(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Catchphrases Not found",
+			"message": "Eslogans no encontrados",
 			"error":   err,
 		})
 	}
@@ -79,11 +79,11 @@ func GetAllSlogans(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"data":      slogans,
-		"total":     total,
-		"page":      page,
-		"last_page": last,
-		"limit":     limit,
+		"data":          slogans,
+		"total":         total,
+		"pagina":        page,
+		"última pagina": last,
+		"limite":        limit,
 	})
 }
 
@@ -97,7 +97,7 @@ func GetSlogan(c *fiber.Ctx) error {
 	if err := findResult.Err(); err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "slogan Not found",
+			"message": "Eslogan no encontrado",
 			"error":   err,
 		})
 	}
@@ -106,7 +106,7 @@ func GetSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "slogan Not found",
+			"message": "Eslogan no encontrado",
 			"error":   err,
 		})
 	}
@@ -121,13 +121,12 @@ func AddSlogan(c *fiber.Ctx) error {
 	sloganCollection := config.MI.DB.Collection("slogan")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	slogan := new(models.Slogan)
-	log.Println(slogan)
-	log.Println(sloganCollection)
+
 	if err := c.BodyParser(slogan); err != nil {
 		log.Println(err)
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
-			"message": "Failed to parse body",
+			"message": "No se pudo analizar el cuerpo",
 			"error":   err,
 		})
 	}
@@ -136,14 +135,15 @@ func AddSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "No se pudo insertar la frase clave",
+			"message": "No se pudo insertar el eslogan",
 			"error":   err,
 		})
 	}
+
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"data":    result,
 		"success": true,
-		"message": "Frase clave insertada correctamente",
+		"message": "Eslogan insertado correctamente",
 	})
 
 }
@@ -157,7 +157,7 @@ func UpdateSlogan(c *fiber.Ctx) error {
 		log.Println(err)
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
-			"message": "Failed to parse body",
+			"message": "No se pudo analizar el cuerpo",
 			"error":   err,
 		})
 	}
@@ -166,7 +166,7 @@ func UpdateSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Frase de captura no encontrada",
+			"message": "Eslogan no encontrado",
 			"error":   err,
 		})
 	}
@@ -178,13 +178,13 @@ func UpdateSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "La frase clave no se pudo actualizar",
+			"message": "El eslogan no se pudo actualizar",
 			"error":   err.Error(),
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": true,
-		"message": "La frase clave se actualizó correctamente",
+		"message": "El eslogan se actualizó correctamente",
 	})
 }
 
@@ -196,7 +196,7 @@ func DeleteSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"success": false,
-			"message": "Frase de captura no encontrada",
+			"message": "Eslogan no encontrado",
 			"error":   err,
 		})
 	}
@@ -204,12 +204,12 @@ func DeleteSlogan(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"success": false,
-			"message": "No se pudo borrar la frase clave",
+			"message": "No se pudo borrar el eslogan",
 			"error":   err,
 		})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"success": true,
-		"message": "La frase clave se eliminó correctamente",
+		"message": "El eslogan se eliminó correctamente",
 	})
 }
